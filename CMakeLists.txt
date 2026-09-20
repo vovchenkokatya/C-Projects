@@ -5,7 +5,6 @@ set(CMAKE_C_STANDARD 11)
 
 add_executable(uni_labs main.c)
 add_executable(task_3_1 classwork/task_3.1.c)
-add_executable(cw_main classwork/main.c)
 add_executable(task_3_12 homework/task_3.12.c)
 add_executable(task_3_23 homework/task_3.23.c)
 add_executable(task_3_7 classwork/task_3.7.c)
