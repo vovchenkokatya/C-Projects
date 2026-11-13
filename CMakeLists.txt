@@ -1,10 +1,16 @@
 cmake_minimum_required(VERSION 4.3)
-project(uni_labs C)
+project(uni_labs C CXX)
 
 set(CMAKE_C_STANDARD 11)
 
 add_executable(uni_labs main.c)
 add_executable(task_3_1 classwork/task_3.1.c)
+add_executable(task_14_1 lab14/classwork/task_14.1.cpp)
+add_executable(task_14_9 lab14/homework/task_14.9.cpp)
+add_executable(task_14_3 lab14/classwork/task_14.3.cpp)
+add_executable(task_14_4 lab14/classwork/task_14.4.cpp)
+add_executable(task_14_5 lab14/classwork/task_14.5.cpp)
+add_executable(task_14_2 lab14/classwork/task_14.2.cpp)
 add_executable(task_3_12 homework/task_3.12.c)
 add_executable(task_3_23 homework/task_3.23.c)
 add_executable(task_3_7 classwork/task_3.7.c)
