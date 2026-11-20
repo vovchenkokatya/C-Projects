@@ -71,7 +71,7 @@ int oldest_man(const Employee p[], int n) {
     return index;
 }
 
-int main() {
+int main(void) {
     Employee p[N];
     int n;
     printf("Input number of employees: ");

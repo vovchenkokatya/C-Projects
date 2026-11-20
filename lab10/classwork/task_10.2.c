@@ -15,7 +15,7 @@ bool queenMove(Chessfield a, Chessfield b) {
     int dx=abs(a.hor-b.hor), dy=abs(a.vert-b.vert);
     return (dx || dy) && (dx==0 || dy==0 || dx==dy);
 }
-int main() {
+int main(void) {
     Chessfield a,b;
     printf("Start field (e.g. a5): "); if (!inputField(&a)) return 1;
     printf("Destination field: "); if (!inputField(&b)) return 1;

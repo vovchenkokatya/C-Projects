@@ -1,72 +1,109 @@
+#include "rational.h"
+#include <errno.h>
+#include <limits.h>
 #include <stdio.h>
-#include <stdbool.h>
-#include "test_rational.c"
 
-typedef struct {
+static unsigned long long magnitude(int n) {
+    return n < 0 ? (unsigned long long)(-(long long)n) : (unsigned long long)n;
+}
+
+static unsigned long long gcd_wide(unsigned long long a, unsigned long long b) {
+    while (b != 0) {
+        unsigned long long remainder = a % b;
+        a = b;
+        b = remainder;
+    }
+    return a;
+}
+
+// Use magnitudes to avoid signed overflow before reducing the result.
+static Rational make_rational(unsigned long long n, bool negative, unsigned long long d) {
+    if (d == 0) {
+        errno = EDOM;
+        return (Rational){0, 0};
+    }
+    unsigned long long divisor = gcd_wide(n, d);
+    n /= divisor;
+    d /= divisor;
+    unsigned long long limit = (unsigned long long)INT_MAX + (negative ? 1u : 0u);
+    if (n > limit || d > UINT_MAX) {
+        errno = ERANGE;
+        return (Rational){0, 0};
+    }
     int numerator;
-    unsigned denominator;
-} Rational;
+    if (negative && n == (unsigned long long)INT_MAX + 1)
+        numerator = INT_MIN;
+    else
+        numerator = negative ? -(int)n : (int)n;
+    return (Rational){numerator, (unsigned)d};
+}
 
-void vyvod(const Rational x) {
-    printf("\nR= %d / %u ", x.numerator, x.denominator);
+void vyvod(Rational x) {
+    printf("%d / %u", x.numerator, x.denominator);
 }
 
 int input(Rational* x) {
-    printf("Input numerator and denominator:");
-    int r1 = scanf("%d", &x->numerator);
-    int r2 = scanf("%u", &x->denominator);
-    if (r1 != 1 || r2 != 1) return -1;
+    long long numerator, denominator;
+    printf("Input numerator and denominator: ");
+    if (scanf("%lld%lld", &numerator, &denominator) != 2
+        || numerator < INT_MIN || numerator > INT_MAX
+        || denominator <= 0 || (unsigned long long)denominator > UINT_MAX)
+        return -1;
+    *x = (Rational){(int)numerator, (unsigned)denominator};
     return 0;
 }
 
 bool equal(const Rational* a, const Rational* b) {
-    return a->numerator * b->denominator == b->numerator * a->denominator;
+    return a->denominator != 0 && b->denominator != 0 && cmp(a, b) == 0;
 }
 
 unsigned gcd(unsigned a, unsigned b) {
-    if (a == 0 || b == 0) return a + b;
-    if (a > b) return gcd(b, a % b);
-    else return gcd(a, b % a);
+    return (unsigned)gcd_wide(a, b);
 }
 
-Rational reduce(const Rational x) {
-    unsigned d;
-    if (x.numerator >= 0) d = gcd(x.numerator, x.denominator);
-    else d = gcd(-x.numerator, x.denominator);
-    
-    Rational z;
-    z.numerator = (int)x.numerator / (int)d;
-    z.denominator = x.denominator / d;
-    return z;
+Rational reduce(Rational x) {
+    return make_rational(magnitude(x.numerator), x.numerator < 0, x.denominator);
 }
 
 void reduce_inplace(Rational* x) {
-    unsigned d = x->numerator >= 0 ? gcd(x->numerator, x->denominator) : gcd(-x->numerator, x->denominator);
-    x->numerator /= (int)d;
-    x->denominator /= d;
+    *x = reduce(*x);
 }
 
-Rational add(const Rational a, const Rational b) {
-    Rational c;
-    c.numerator = (int)(a.numerator * b.denominator) + (int)(b.numerator * a.denominator);
-    c.denominator = a.denominator * b.denominator;
-    reduce_inplace(&c);
-    return c;
+Rational add(Rational a, Rational b) {
+    if (a.denominator == 0 || b.denominator == 0) {
+        errno = EDOM;
+        return (Rational){0, 0};
+    }
+    unsigned long long left = magnitude(a.numerator) * b.denominator;
+    unsigned long long right = magnitude(b.numerator) * a.denominator;
+    unsigned long long numerator;
+    bool negative;
+    if ((a.numerator < 0) == (b.numerator < 0)) {
+        numerator = left + right;
+        negative = a.numerator < 0;
+    } else if (left >= right) {
+        numerator = left - right;
+        negative = a.numerator < 0;
+    } else {
+        numerator = right - left;
+        negative = b.numerator < 0;
+    }
+    return make_rational(numerator, negative,
+                         (unsigned long long)a.denominator * b.denominator);
 }
 
-Rational mul(const Rational a, const Rational b) {
-    Rational c;
-    c.numerator = a.numerator * b.numerator;
-    c.denominator = a.denominator * b.denominator;
-    reduce_inplace(&c);
-    return c;
+Rational mul(Rational a, Rational b) {
+    return make_rational(magnitude(a.numerator) * magnitude(b.numerator),
+                         (a.numerator < 0) != (b.numerator < 0),
+                         (unsigned long long)a.denominator * b.denominator);
 }
 
 int cmp(const Rational* a, const Rational* b) {
-    int left = a->numerator * b->denominator;
-    int right = b->numerator * a->denominator;
-    
-    if (left < right) return -1;
-    if (left > right) return 1;
-    return 0;
+    if (a->denominator == 0 || b->denominator == 0) {
+        errno = EDOM;
+        return INT_MIN;
+    }
+    long long left = (long long)a->numerator * b->denominator;
+    long long right = (long long)b->numerator * a->denominator;
+    return (left > right) - (left < right);
 }

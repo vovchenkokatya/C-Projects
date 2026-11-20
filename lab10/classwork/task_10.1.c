@@ -53,7 +53,7 @@ void printPolynomial(const Polynomial* p) {
     }
     printf("\n");
 }
-int main() {
+int main(void) {
     Date d; Chessfield f; Rect r; Polynomial poly={0,NULL};
     if (inputDate(&d)) printDate(d); else return 1;
     if (inputChessfield(&f)) printChessfield(f); else { printf("Invalid chess field\n"); return 1; }

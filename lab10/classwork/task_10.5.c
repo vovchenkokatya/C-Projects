@@ -20,7 +20,7 @@ int findByName(const Mountain* a,int n,const char* name){
     for(int i=0;i<n;++i) if(strcmp(a[i].name,name)==0) return i;
     return -1;
 }
-int main(){
+int main(void){
     int n;printf("Number of mountains (1..10000): ");
     if(scanf("%d",&n)!=1 || n<1 || n>10000) return 1;
     Mountain* a=(Mountain*)malloc(n*sizeof(Mountain));if(!a)return 1;

@@ -19,7 +19,7 @@ int weekday(Date d) { // 0=Sunday, 1=Monday, ..., 6=Saturday
     struct tm t={0}; t.tm_mday=d.day; t.tm_mon=d.month-1; t.tm_year=d.year-1900; t.tm_hour=12;
     mktime(&t); return t.tm_wday;
 }
-int main() {
+int main(void) {
     Date d; printf("Date (day month year): ");
     if (scanf("%d%d%d", &d.day,&d.month,&d.year)!=3 || !validDate(d)) { printf("Invalid date\n"); return 1; }
     Date next=tomorrow(d);
