@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 4.3)
-project(uni_labs C)
+project(uni_labs C CXX)
 
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(uni_labs main.c)
 add_executable(task_3_1 classwork/task_3.1.c)
@@ -13,3 +15,8 @@ add_executable(task_3_5 classwork/task_3.5.c)
 add_executable(task_3_4 classwork/task_3.4.c)
 add_executable(task_3_3 classwork/task_3.3.c)
 add_executable(task_3_2 classwork/task_3.2.c)
+
+add_executable(task_18_1 lab18/classwork/task_18.1.cpp lab18/common/Rational.cpp)
+add_executable(task_18_2 lab18/classwork/task_18.2.cpp)
+add_executable(task_18_4 lab18/homework/task_18.4.cpp)
+add_executable(task_18_5b lab18/homework/task_18.5b.cpp)
