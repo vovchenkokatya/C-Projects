@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 4.3)
-project(uni_labs C)
+project(uni_labs C CXX)
 
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(uni_labs main.c)
 add_executable(task_3_1 classwork/task_3.1.c)
@@ -13,3 +15,8 @@ add_executable(task_3_5 classwork/task_3.5.c)
 add_executable(task_3_4 classwork/task_3.4.c)
 add_executable(task_3_3 classwork/task_3.3.c)
 add_executable(task_3_2 classwork/task_3.2.c)
+
+add_executable(task_15_1 lab15/testRational.cpp lab15/Rational.cpp)
+add_executable(task_15_2 lab15/testPoint.cpp lab15/Point.cpp lab15/Polygone.cpp)
+add_executable(task_15_3 lab15/testPolynomial.cpp lab15/Polynomial.cpp)
+add_executable(task_15_6 lab15/homework/task_15.6.cpp lab15/homework/Rectangle.cpp)
