@@ -13,3 +13,6 @@ add_executable(task_3_5 classwork/task_3.5.c)
 add_executable(task_3_4 classwork/task_3.4.c)
 add_executable(task_3_3 classwork/task_3.3.c)
 add_executable(task_3_2 classwork/task_3.2.c)
+
+add_executable(individual_task individual_task/main.cpp)
+add_executable(task_1_theory individual_task/task_1_theory.cpp)
